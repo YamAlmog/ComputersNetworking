@@ -1,7 +1,7 @@
 import socket
 
-PORT= 8002
-SERVER_IP= '0.0.0.0'
+PORT= 20
+SERVER_IP= '192.168.1.101'
 BIND=(SERVER_IP,PORT)
 HEADER=1024
 server=socket.socket()
@@ -53,7 +53,6 @@ def start():
     user_2.send(f'{name_1} has connected to the chat room'.encode('utf-8'))
 
     handle_client(user_1, user_2, name_1, name_2)
-
 
 
 server.listen()

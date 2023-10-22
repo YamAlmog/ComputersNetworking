@@ -1,6 +1,6 @@
 import socket
-
-
+my_socket = socket.socket()
+my_socket.connect(("192.168.1.101", 20))
 
 def chating(socket):
     while True:
@@ -21,6 +21,8 @@ def start(socket):
         name = input('Enter your name:\n')
         socket.send(name.encode())
         print('To exit from the chat room any time, please enter the word: Exit')
+        server_report = socket.recv(1024).decode('utf-8')
+        print(server_report)
         chating(socket)
     
     else:
@@ -28,9 +30,8 @@ def start(socket):
         socket.close()
 
 
-def main():
-    my_socket = socket.socket()
-    my_socket.connect(("0.0.0.0", 8002))
-    print("client is connecting\n")
-    print("waiting for the server to response\n")
-    start(my_socket)
+
+
+print("client is connecting\n")
+print("waiting for the server to response\n")
+start(my_socket)
