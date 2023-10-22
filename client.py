@@ -1,40 +1,36 @@
 import socket
 
-my_socket = socket.socket()
-my_socket.connect(("192.168.1.101", 8002))
-
-print("client is connecting")
-
-name = input('Ente your name:\n')
-my_socket.send(name.encode())
-
-print("waiting for the server to response")
-server_message = my_socket.recv(1024).decode('utf-8')
-
-print("The server sent:\n" + server_message)
-
-while True:
-    msg_to_send = input('Ente msg to your friend:\n')
-    my_socket.send(msg_to_send.encode())
-
-    friend_msg = my_socket.recv(1024).decode('utf-8')
-    print("Your friend sent:\n" + friend_msg)
-
-my_socket.close()
 
 
+def chating(socket):
+    while True:
+        msg_to_send = input('Ente your msg:\n')
+        socket.send(msg_to_send.encode())
 
-# def client_send():
-#     while True:
-#         message = f'{nickname}: {input("")}'
-#         client.send(message.encode('utf-8'))
+        friend_msg = socket.recv(1024).decode('utf-8')
+        print("Your friend sent:\n" + friend_msg)
 
+        if msg_to_send or friend_msg == 'Exit':
+            socket.close()
+            break
 
-# while True:
-#     try:
-#         message = client.recv(1024).decode('utf-8')
-#         if message == "name?":
-#             client.send(nickname.encode('utf-8'))
+def start(socket):
+    server_message = socket.recv(1024).decode('utf-8')
+
+    if server_message == "Entre name:":
+        name = input('Enter your name:\n')
+        socket.send(name.encode())
+        print('To exit from the chat room any time, please enter the word: Exit')
+        chating(socket)
     
+    else:
+        print('There was an eror with the server, try next time.')
+        socket.close()
 
 
+def main():
+    my_socket = socket.socket()
+    my_socket.connect(("0.0.0.0", 8002))
+    print("client is connecting\n")
+    print("waiting for the server to response\n")
+    start(my_socket)
