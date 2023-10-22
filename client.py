@@ -1,6 +1,6 @@
 import socket
 my_socket = socket.socket()
-my_socket.connect(("192.168.1.101", 20))
+my_socket.connect(("192.168.1.101", 8020))
 
 def chating(socket):
     while True:
@@ -10,7 +10,7 @@ def chating(socket):
         friend_msg = socket.recv(1024).decode('utf-8')
         print("Your friend sent:\n" + friend_msg)
 
-        if msg_to_send or friend_msg == 'Exit':
+        if msg_to_send == 'EXIT' or friend_msg == 'EXIT':
             socket.close()
             break
 
@@ -20,7 +20,7 @@ def start(socket):
     if server_message == "Entre name:":
         name = input('Enter your name:\n')
         socket.send(name.encode())
-        print('To exit from the chat room any time, please enter the word: Exit')
+        print('To exit from the chat room any time, please enter the word: EXIT')
         server_report = socket.recv(1024).decode('utf-8')
         print(server_report)
         chating(socket)

@@ -1,6 +1,6 @@
 import socket
 
-PORT= 20
+PORT= 8020
 SERVER_IP= '192.168.1.101'
 BIND=(SERVER_IP,PORT)
 HEADER=1024
@@ -24,9 +24,11 @@ def handle_client(client_1, client_2, name_1, name_2):
         client_1.send(message_2.encode('utf-8'))
         print(f"{name_2} sent: {message_2}")
 
-        if message_1 or message_2 == 'Exit':
+        if message_1 == 'EXIT' or message_2 == 'EXIT':
+            print('This correspondence has ended.')
             break
-
+        else:
+            continue
 
     client_1.close()
     client_2.close()
