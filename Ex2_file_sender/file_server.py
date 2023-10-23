@@ -12,8 +12,6 @@ server.listen()
 print(f"[LISTENING] Server is listenin on...")
 
 
-        
-
 def send_file_to_receiver(user ,filename):
    
     # Reading file and sending data to user 
