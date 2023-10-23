@@ -24,6 +24,7 @@ def start(socket):
         server_report = socket.recv(1024).decode('utf-8')
         print(server_report)
         chating(socket)
+        
     
     else:
         print('There was an eror with the server, try next time.')
