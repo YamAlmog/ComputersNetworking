@@ -1,6 +1,6 @@
 import socket
 
-PORT = 8820
+PORT = 8020
 SERVER_IP = "127.0.0.1"
 CHUNK_SIZE = 1024
 FILE_NOT_FOUND = "NOFILE"
@@ -9,13 +9,13 @@ EMPTY_FILE= "Empty file"
 MAGIC_END_FILE_KEY = "$$$<END_OF_FILE>$$$"
 
 # connect and return socket
-def connect_to_server(socket):
+def connect_to_server():
     try: 
-        socket = socket.socket()
-        socket.connect((SERVER_IP, PORT))
-        return socket
-    except:
-        raise Exception("Could not connect")
+        server_socket = socket.socket()
+        server_socket.connect((SERVER_IP, PORT))
+        return server_socket
+    except socket.error as e:
+        raise Exception(f"Could not connect: {str(e)}")
 
 # returns file name 
 def get_user_request():
@@ -52,12 +52,33 @@ def get_file_from_server(socket, file_name):
     file.close()
 
 
+# def foo(x):
+#     if x == 0:
+#         raise ZeroDivisionError("X is 0")
+#     if x < 5:
+#         raise Exception("X too small")
+#     if x ==7:
+#         raise IOError("blablabla")
+#     else:
+#         return 10
+
+# def main():
+#     try:
+#         foo(0)
+
+    # except IOError as e:
+    #     print(f"IOError: {e}")
+    # except Exception as e:
+    #     print(f"error: {e}")
+
+
+
 def main():
 
     try:
         server_socket = connect_to_server()
-    except Exception:
-        print("Connection Error: something went wrong, Apologies for the inconvenience.")
+    except Exception as ex:
+        print(f"Connection Error: something went wrong, Apologies for the inconvenience\n {ex}")
         return
 
     user_request= get_user_request()
@@ -71,9 +92,10 @@ def main():
 
         user_request= get_user_request()
 
-    server_socket.close()
+    if user_request== END_THE_PROGRAM:
+        server_socket.close()
 
 
 
-
-
+if __name__ == "__main__":
+    main()
