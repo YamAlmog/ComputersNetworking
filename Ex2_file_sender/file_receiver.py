@@ -37,7 +37,7 @@ def get_file_from_server(socket, file_name):
     # get chunk by chunk the file from server
     # until the end of file is received
     data = socket.recv(shared.CHUNK_SIZE)
-    print(data.decode())
+    print(f"The data before while loop: {data.decode()}")
     
     while data != shared.MAGIC_END_FILE_KEY:
         if data.decode('utf-8') == shared.EMPTY_FILE:
@@ -49,7 +49,7 @@ def get_file_from_server(socket, file_name):
             file.write(data)
             data = socket.recv(shared.CHUNK_SIZE)
             print(f"geting data from server: {data}")
-            continue
+            
         
     print("file get to end")
     file.close()

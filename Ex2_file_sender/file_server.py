@@ -28,7 +28,7 @@ def send_file_to_receiver(user_socket, filename):
     # File is closed after data is sent
     print(f"Finish sendin the data...")
     file.close()  
-    user_socket.send(shared.MAGIC_END_FILE_KEY.encode('utf-8'))
+    user_socket.send(shared.MAGIC_END_FILE_KEY)
 
 
 
