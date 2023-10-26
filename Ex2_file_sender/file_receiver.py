@@ -49,7 +49,7 @@ def get_file_from_server(socket, file_name):
             file.write(data)
             data = socket.recv(shared.CHUNK_SIZE)
             print(f"geting data from server: {data}")
-            
+
         
     print("file get to end")
     file.close()

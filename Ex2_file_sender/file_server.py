@@ -1,6 +1,7 @@
 import socket
 import os
 import shared
+import time
 
 
 server = socket.socket()
@@ -19,7 +20,8 @@ def send_file_to_receiver(user_socket, filename):
     
     while data:
         # data could be any kind of data, not just text file
-        user_socket.send(data)
+        time.sleep(0.001)
+        user_socket.sendall(data)
         print(f"Sending the data is in progress...")
 
         # read the rest of the file. chunk by chunk
@@ -28,7 +30,7 @@ def send_file_to_receiver(user_socket, filename):
     # File is closed after data is sent
     print(f"Finish sendin the data...")
     file.close()  
-    user_socket.send(shared.MAGIC_END_FILE_KEY)
+    user_socket.sendall(shared.MAGIC_END_FILE_KEY)
 
 
 
@@ -50,7 +52,7 @@ def main():
             
         else:
             print(f"{request_file} does not exist") 
-            receiver.send(shared.FILE_NOT_FOUND) 
+            receiver.send(shared.FILE_NOT_FOUND.encode()) 
     
         print("requesting another file from user:")
         request_file = receiver.recv(shared.CHUNK_SIZE)
