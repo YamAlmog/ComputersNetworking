@@ -22,36 +22,43 @@ def get_user_request():
 
 
 def get_file_from_server(socket, file_name):
-    # Create the folder
-    if not os.path.exists(shared.OUTPUT_DIR_NAME):
-        os.mkdir(shared.OUTPUT_DIR_NAME)
-        print(f"{shared.OUTPUT_DIR_NAME} folder has been created")
-
-    # Create the full path to the file within the folder
-    file_path = os.path.join(shared.OUTPUT_DIR_NAME, file_name)
-    file = open(file_path, "wb")
-    
     # send file name to server to check if exsist
     socket.send(file_name.encode('utf-8'))
 
-    # get chunk by chunk the file from server
-    # until the end of file is received
+    # get first chunk of the file from server
     data = socket.recv(shared.CHUNK_SIZE)
-    print(f"The data before while loop: {data.decode()}")
     
-    while data != shared.MAGIC_END_FILE_KEY:
-        if data.decode('utf-8') == shared.EMPTY_FILE:
+    if data == shared.EMPTY_FILE:
             print("The requested file is empty")
-            break
-        elif data.decode('utf-8') == shared.FILE_NOT_FOUND:
+            return
+    
+    elif data == shared.FILE_NOT_FOUND:
             raise Exception("File not found")
-        else:
+    
+    
+    else:
+        # Create the folder
+        if not os.path.exists(shared.OUTPUT_DIR_NAME):
+            os.mkdir(shared.OUTPUT_DIR_NAME)
+            print(f"{shared.OUTPUT_DIR_NAME} folder has been created")
+
+        # Create the full path to the file within the folder
+        file_path = os.path.join(shared.OUTPUT_DIR_NAME, file_name)
+        file = open(file_path, "wb")
+    
+        
+        while shared.MAGIC_END_FILE_KEY.decode() not in data.decode():            
             file.write(data)
             data = socket.recv(shared.CHUNK_SIZE)
             print(f"geting data from server: {data}")
 
         
-    print("file get to end")
+        if data.decode() != shared.MAGIC_END_FILE_KEY.decode():
+             data = data.replace(shared.MAGIC_END_FILE_KEY, b'')
+             file.write(data)
+             
+        
+    print("File get to end.")
     file.close()
 
 
@@ -67,19 +74,19 @@ def main():
         return
 
     user_request= get_user_request()
-    while user_request != shared.END_THE_PROGRAM: 
+    
+    while user_request.encode() != shared.END_THE_PROGRAM: 
         try:
             get_file_from_server(server_socket, user_request)
-            print("in try block")
+            
         except Exception as e:
-            # print(f"Error:{e}, There isn't file named: {user_request}")
-            raise e
+            print(f"There isn't file named: {user_request}")
         finally:    
-            print("I'm at finaly, get user request again")
             user_request= get_user_request()
 
-    if user_request== shared.END_THE_PROGRAM:
-        server_socket.close()
+    server_socket.send(user_request.encode())
+    print("You asked to end the program. Hope to see you soon.")
+    server_socket.close()
 
 
 
