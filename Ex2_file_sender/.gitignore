@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.txt
+*.mp4
+*.pptx
+*.pdf
+*.docx
+output/*
