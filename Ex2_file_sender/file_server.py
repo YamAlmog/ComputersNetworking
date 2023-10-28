@@ -14,7 +14,7 @@ def send_file_to_receiver(user_socket, filename):
 
     # read first chunk of the file
     data = file.read(shared.CHUNK_SIZE)
-    #In case of empty file
+    # In case of empty file
     if len(data) == 0: 
         print(f"{filename} is empty file")
         user_socket.send(shared.EMPTY_FILE)
@@ -72,4 +72,4 @@ if __name__ == "__main__":
     main() 
 
 
-    # ask the client what IP to connect
+   

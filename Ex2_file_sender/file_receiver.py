@@ -5,6 +5,7 @@ from errors import *
         
 # connect and return socket
 def connect_to_server():
+    # asking the client to input IP 
     SERVER_IP = input("Pleas input the IP to connect with: ")
     try: 
         server_socket = socket.socket()
@@ -29,7 +30,6 @@ def get_file_from_server(socket, file_name):
     # get first chunk of the file from server
     data = socket.recv(shared.CHUNK_SIZE)
 
-    # print(f"Data received:\n {data}")
 
     if shared.LIST_DIR.encode() in data:
         print("-" * 10 + "[DIR LIST]" + "-" * 10)
@@ -87,8 +87,8 @@ def main():
             print(f" {e}")
         except socket.error as e:
             print(f"Network Error: {e}")
-        #except Exception as e:
-        #    print(f"Unknown Error: {e}")
+        except Exception as e:
+            print(f"Unknown Error: {e}")
 
             
         finally:    
