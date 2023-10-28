@@ -56,7 +56,7 @@ def get_file_from_server(socket, file_name):
              file.write(data)
              
         
-    print("File get to end.")
+    print("Finish transferring the file.")
     file.close()
 
 

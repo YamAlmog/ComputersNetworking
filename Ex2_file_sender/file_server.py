@@ -11,8 +11,7 @@ server.bind(shared.BIND)
 def send_file_to_receiver(user_socket, filename):
     # Reading file and sending data to user
     file = open(filename, "rb")
-    print(f"Opened file {filename}")
-    
+
     # read first chunk of the file
     data = file.read(shared.CHUNK_SIZE)
     #In case of empty file
@@ -43,8 +42,7 @@ def main():
         (receiver, address) = server.accept()
         print("Receiver is connected")
 
-        request_file = receiver.recv(shared.CHUNK_SIZE)
-        print(request_file)    
+        request_file = receiver.recv(shared.CHUNK_SIZE)    
         
         while request_file != shared.END_THE_PROGRAM:
 
