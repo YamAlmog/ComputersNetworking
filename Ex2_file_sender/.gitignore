@@ -4,4 +4,7 @@ __pycache__/
 *.pyd
 *.txt
 *.mp4
+*.pptx
+*.pdf
+*.docx
 output/*
