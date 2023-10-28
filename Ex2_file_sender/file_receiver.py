@@ -1,6 +1,7 @@
 import socket
 import os
 import shared
+from errors import *
 
 SERV_IP = "127.0.0.1"
 # connect and return socket
@@ -33,8 +34,7 @@ def get_file_from_server(socket, file_name):
             return
     
     elif data == shared.FILE_NOT_FOUND:
-            raise Exception("File not found")
-    
+            raise FileNotFoundException(f"File: {file_name} not found")
     
     else:
         # Create the folder
@@ -45,23 +45,19 @@ def get_file_from_server(socket, file_name):
         # Create the full path to the file within the folder
         file_path = os.path.join(shared.OUTPUT_DIR_NAME, file_name)
         file = open(file_path, "wb")
-    
         
-        while shared.MAGIC_END_FILE_KEY.decode() not in data.decode():            
+        while shared.MAGIC_END_FILE_KEY not in data:            
             file.write(data)
             data = socket.recv(shared.CHUNK_SIZE)
-            print(f"geting data from server: {data}")
 
         
-        if data.decode() != shared.MAGIC_END_FILE_KEY.decode():
+        if data != shared.MAGIC_END_FILE_KEY:
              data = data.replace(shared.MAGIC_END_FILE_KEY, b'')
              file.write(data)
              
         
     print("File get to end.")
     file.close()
-
-
 
 
 def main():
@@ -79,8 +75,14 @@ def main():
         try:
             get_file_from_server(server_socket, user_request)
             
+        except FileNotFoundException as e:
+            print(f" {e}")
+        except socket.error as e:
+            print(f"Network Error: {e}")
         except Exception as e:
-            print(f"There isn't file named: {user_request}")
+            print(f"Unknown Error: {e}")
+
+            
         finally:    
             user_request= get_user_request()
 

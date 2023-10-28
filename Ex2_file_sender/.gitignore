@@ -3,4 +3,5 @@ __pycache__/
 *.pyo
 *.pyd
 *.txt
+*.mp4
 output/*

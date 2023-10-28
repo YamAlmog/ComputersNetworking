@@ -11,6 +11,7 @@ server.bind(shared.BIND)
 def send_file_to_receiver(user_socket, filename):
     # Reading file and sending data to user
     file = open(filename, "rb")
+    print(f"Opened file {filename}")
     # read first chunk of the file
     data = file.read(shared.CHUNK_SIZE)
     #In case of empty file
@@ -46,12 +47,12 @@ def main():
         
         while request_file != shared.END_THE_PROGRAM:
 
-            if os.path.exists(request_file):
+            if os.path.exists(request_file.decode()):
                 print(f"{request_file} exist")
-                send_file_to_receiver(receiver, request_file)
+                send_file_to_receiver(receiver, request_file.decode())
                 
             else:
-                print(f"{request_file} does not exist") 
+                print(f"{request_file.decode()} does not exist") 
                 receiver.send(shared.FILE_NOT_FOUND) 
         
             print("requesting another file from user:")
@@ -65,3 +66,6 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+
+    # ask the client what IP to connect
