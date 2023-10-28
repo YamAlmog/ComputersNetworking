@@ -12,6 +12,7 @@ def send_file_to_receiver(user_socket, filename):
     # Reading file and sending data to user
     file = open(filename, "rb")
     print(f"Opened file {filename}")
+    
     # read first chunk of the file
     data = file.read(shared.CHUNK_SIZE)
     #In case of empty file
