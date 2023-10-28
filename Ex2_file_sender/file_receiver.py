@@ -2,13 +2,13 @@ import socket
 import os
 import shared
 from errors import *
-
-
+        
 # connect and return socket
-def connect_to_server(server_IP):
+def connect_to_server():
+    SERVER_IP = input("Pleas input the IP to connect with: ")
     try: 
         server_socket = socket.socket()
-        server_socket.connect((server_IP, shared.PORT))
+        server_socket.connect((SERVER_IP, shared.PORT))
         return server_socket
     except socket.error as e:
         raise Exception(f"Could not connect: {str(e)}")
@@ -62,13 +62,11 @@ def get_file_from_server(socket, file_name):
 
 def main():
     
-    SERVER_IP = input("Pleas input the IP to connect with: ")
-
     try:
-        server_socket = connect_to_server(SERVER_IP)
+        server_socket = connect_to_server()
         print("Receiver is connected to the server")
     except Exception as ex:
-        print(f"Connection Error: something went wrong, Apologies for the inconvenience\n {ex}")
+        print(f"Connection Error: {ex}")
         return
 
     user_request= get_user_request()
