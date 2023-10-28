@@ -28,13 +28,21 @@ def get_file_from_server(socket, file_name):
 
     # get first chunk of the file from server
     data = socket.recv(shared.CHUNK_SIZE)
-    
+
+    # print(f"Data received:\n {data}")
+
+    if shared.LIST_DIR.encode() in data:
+        print("-" * 10 + "[DIR LIST]" + "-" * 10)
+        dir_list = data.decode().replace(shared.LIST_DIR, '')
+        print(dir_list)
+        return
+
     if data == shared.EMPTY_FILE:
-            print("The requested file is empty")
-            return
+        print("The requested file is empty")
+        return
     
     elif data == shared.FILE_NOT_FOUND:
-            raise FileNotFoundException(f"File: {file_name} not found")
+        raise FileNotFoundException(f"File: {file_name} not found")
     
     else:
         # Create the folder
@@ -56,7 +64,7 @@ def get_file_from_server(socket, file_name):
              file.write(data)
              
         
-    print("Finish transferring the file.")
+    print("Finished transferring the file.")
     file.close()
 
 
@@ -79,8 +87,8 @@ def main():
             print(f" {e}")
         except socket.error as e:
             print(f"Network Error: {e}")
-        except Exception as e:
-            print(f"Unknown Error: {e}")
+        #except Exception as e:
+        #    print(f"Unknown Error: {e}")
 
             
         finally:    

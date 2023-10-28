@@ -37,16 +37,21 @@ def send_file_to_receiver(user_socket, filename):
 def main():
     while True:
         server.listen()
-        print(f"[LISTENING] Server is listenin on...")
+        print(f"[LISTENING] Server is listening on...")
 
         (receiver, address) = server.accept()
         print("Receiver is connected")
 
         request_file = receiver.recv(shared.CHUNK_SIZE)    
-        
+
         while request_file != shared.END_THE_PROGRAM:
 
-            if os.path.exists(request_file.decode()):
+            if request_file == shared.LIST_DIR.encode():
+                list_dir = os.listdir()
+                print("Sending dir list")
+                receiver.send(f"{shared.LIST_DIR}  {str(list_dir)}".encode())
+                
+            elif os.path.exists(request_file.decode()):
                 print(f"{request_file} exist")
                 send_file_to_receiver(receiver, request_file.decode())
                 
