@@ -1,0 +1,11 @@
+
+PORT = 8020
+SERVER_IP = "0.0.0.0"
+BIND = (SERVER_IP, PORT)
+CHUNK_SIZE = 4096
+FILE_NOT_FOUND = b"NOFILE"
+END_THE_PROGRAM = b"DONE"
+EMPTY_FILE= b"Empty file"
+MAGIC_END_FILE_KEY = b"$$$<--<@>--->$$$"
+OUTPUT_DIR_NAME = "output"
+LIST_DIR= "List-dir"
