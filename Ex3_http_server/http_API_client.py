@@ -1,18 +1,19 @@
 import requests
+URL = "http://localhost:8080"
 
 def get_data():
-    api_url= "http://localhost:8080"
-    
-    response = requests.get(api_url)
+    response = requests.get(URL)
     print(response.text)
 
 def post_sentence():
-    url= "http://localhost:8080"
-    inp= {"sentence": "Hello Mami Sheli"}
-    response= requests.post(url, json= inp)
+    inp= input("Please input data according to this format: {'sentence' : '___', 'font_size' : '___', 'color' : '___'} ---> \n")
+    response= requests.post(URL, json = inp)
+    print(response.text)
 
 def main():
+    get_data
     post_sentence()
 
 if __name__== "__main__":
     main()
+    
