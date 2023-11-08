@@ -38,7 +38,6 @@ class MyHttpServer(BaseHTTPRequestHandler):
             # Process user_input here
             self.send_response(200)
             self.end_headers()
-
             self.wfile.write(json.dumps({'success' : 'True', 'current_sentence': MyHttpServer.sentence}).encode())
 
         except json.JSONDecodeError as ex:
@@ -50,8 +49,6 @@ class MyHttpServer(BaseHTTPRequestHandler):
             self.send_response(400)
             self.end_headers()
 
-            # Send response to client in that JSON format:
-            # {'success' : 'True/False', 'current_sentence': 'SENTENCE' ,'error': 'ERROR Message' }
             response = {'success' : 'False', 'current_sentence': MyHttpServer.sentence, 'error': str(ex)}
             self.wfile.write(json.dumps(response).encode())  
         
