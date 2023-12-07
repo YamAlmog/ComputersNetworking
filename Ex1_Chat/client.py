@@ -1,38 +1,87 @@
 import socket
-my_socket = socket.socket()
-my_socket.connect(("192.168.1.101", 8020))
+import logging
+import argparse
+import threading
 
-def chating(socket):
-    while True:
-        msg_to_send = input('Ente your msg:\n')
-        socket.send(msg_to_send.encode())
+logging.basicConfig(filename='app.log', filemode='w',  level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
-        friend_msg = socket.recv(1024).decode('utf-8')
-        print("Your friend sent:\n" + friend_msg)
 
-        if msg_to_send == 'EXIT' or friend_msg == 'EXIT':
-            socket.close()
-            break
+def send_message(socket):
+    try:    
+        while True:
+            msg_to_send = input('You:')
+            socket.send(msg_to_send.encode())
+            
+            if msg_to_send == 'EXIT':
+                socket.close()
+                break
+    except OSError:
+        raise OSError("Socket error occurred")
+    except Exception:
+        raise Exception("Unknown error occurred")
+
+def receive_message(socket, friend_name):
+    try:    
+        while True: 
+            friend_msg = socket.recv(1024).decode('utf-8')
+            print(f"{friend_name}: {friend_msg}")
+
+            if friend_msg == 'EXIT':
+                socket.close()
+                break      
+    except OSError:
+        raise OSError("Socket error occurred")
+    except Exception:
+        raise Exception("Unknown error occurred")
+
 
 def start(socket):
-    server_message = socket.recv(1024).decode('utf-8')
+    try:    
+        server_message = socket.recv(1024).decode('utf-8')
 
-    if server_message == "Entre name:":
-        name = input('Enter your name:\n')
-        socket.send(name.encode())
-        print('To exit from the chat room any time, please enter the word: EXIT')
-        server_report = socket.recv(1024).decode('utf-8')
-        print(server_report)
-        chating(socket)
+        if server_message == "Entre name:":
+            name = input('Enter your name:\n')
+            socket.send(name.encode())
+            print('To exit from the chat room any time, enter the word: EXIT')
+            friend_name = socket.recv(1024).decode('utf-8')
+            sender_thread = threading.Thread(target=send_message, args=(socket,))
+            receiver_thread = threading.Thread(target=receive_message, args=(socket, friend_name))
+
+            sender_thread.start()
+            receiver_thread.start()
+
+            sender_thread.join()  
+            receiver_thread.join()
         
+        else:
+            print('There was an error with the server, try next time.')
+            socket.close()
+            
+    except OSError as ex:
+        raise OSError(ex)
+    except Exception as ex:
+        raise Exception(ex)
+
+
+def main():
+    try:    
+        parser = argparse.ArgumentParser(description='This program implements a chat between users')
+        parser.add_argument('SERVER_IP', type=str, help='The server IP to connect with')
+        parser.add_argument('PORT', type=int, help='The port number to listen on')
+        args = parser.parse_args()
+        
+        SERVER_IP = args.SERVER_IP
+        PORT = args.PORT
+
+        my_socket = socket.socket()
+        my_socket.connect((SERVER_IP, PORT))
+
+        logging.debug("client is connecting\n")
+        logging.debug("waiting for the server to response\n")
+        start(my_socket)
     
-    else:
-        print('There was an eror with the server, try next time.')
-        socket.close()
+    except argparse.ArgumentError as ex:
+        print(f"Error: {ex}")
 
-
-
-
-print("client is connecting\n")
-print("waiting for the server to response\n")
-start(my_socket)
+if __name__ == "__main__":
+    main()
